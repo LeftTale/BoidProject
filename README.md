@@ -1,2 +1,2 @@
 # BoidProject
-A simple boids program
+A simple boids program made with Gradle
