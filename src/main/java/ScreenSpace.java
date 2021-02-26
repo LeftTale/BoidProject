@@ -49,10 +49,12 @@ public class ScreenSpace extends JPanel
     {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+
         for (Boid boid : activeBoid)
         {
             g.setColor(boid.getBoidColor());
-            g.fillPolygon((Polygon) boid.getBoidShape());
+            g2.draw(boid.getBoidShape());
+            g2.fill(boid.getBoidShape());
 
         }
     }
@@ -69,21 +71,9 @@ public class ScreenSpace extends JPanel
         @Override
         public void keyPressed(KeyEvent e)
         {
-            int keyCode = e.getKeyCode();
-            switch( keyCode )
+            for(Boid b : activeBoid)
             {
-                case KeyEvent.VK_LEFT:
-                    for(Boid b : activeBoid)
-
-                        break;
-                case KeyEvent.VK_RIGHT:
-                    for(Boid b : activeBoid)
-                        b.addRotation();
-                        break;
-                case KeyEvent.VK_UP:
-                    for(Boid b : activeBoid)
-                        b.printcoords();
-                        break;
+                b.MoveBoidHorizontal();
             }
         }
 

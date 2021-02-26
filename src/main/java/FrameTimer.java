@@ -22,19 +22,14 @@ public class FrameTimer extends Thread
 
             for(Boid b : activeBoids)
             {
-                b.centers();
-
+                b.MoveBoidVertical();
+                b.MoveBoidHorizontal();
             }
-//            for(Boid b : activeBoids)
-//            {
-//                b.MoveBoidVertical();
-//                b.MoveBoidHorizontal();
-//            }
             boidView.repaint();
 
             try
             {
-                sleep(5);
+                sleep(20);
             }
             catch (InterruptedException e)
             {

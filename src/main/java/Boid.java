@@ -2,6 +2,8 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Path2D;
+import java.util.Vector;
 
 public class Boid
 {
@@ -10,15 +12,20 @@ public class Boid
     It also contains variables related to the boid as well as methods
     which control the boids movement and behaviour.
      */
-
     private Color boidColor;
-    int boidX1 ,boidX2,boidX3;
-    int boidY1, boidY2,boidY3;
+    private Path2D boidShape;
+    double boidX1 ,boidX2,boidX3;
+    double boidY1, boidY2,boidY3;
+    double[] coord1 = new double[2];
+    double[] coord2 = new double[2];
+    double[] coord3 = new double[2];
+
     private int wide;
     private int tall;
-    private Shape boidShape;
-    private int movement =2;
+    private double movement = 5.0;
 
+    private double centerX;
+    private double centerY;
 
     public Boid(int wide, int tall, Color color)
     {
@@ -26,19 +33,17 @@ public class Boid
         this.wide = wide;
         this.tall = tall;
         GenerateBoid();
-        boidShape = new Polygon(new int[]{boidX1, boidX2,boidX3}, new int[]{boidY1,boidY2,boidY3},3);
+        //boidShape = new Polygon(new int[]{boidX1, boidX2,boidX3}, new int[]{boidY1,boidY2,boidY3},3);
+
     }
 
-
-    public Shape getBoidShape() {
-        return (Shape) boidShape;
+    public Path2D getBoidShape() {
+        return boidShape;
     }
     public Color getBoidColor()
     {
         return boidColor;
     }
-    public double centerX;
-    public double centerY;
 
     public void GenerateBoid()
     {
@@ -47,90 +52,28 @@ public class Boid
         int posY = (int) (Math.random() * tall);
 
         //Sets one point of the triangle as the base
-        boidX2 = posX;
+        coord2[0] = posX;
         //It then generates the triangle based on this
-        boidX1 = posX - 10;
-        boidX3 = posX + 10;
+        coord1[0] = posX - 10;
+        coord3[0] = posX + 10;
 
         //It then does the same for the Y Coords
-        boidY2 = posY;
+        coord2[1] = posY;
 
-        boidY1 = posY + 25;
-        boidY3= posY + 25;
-    }
+        coord1[1] = posY + 25;
+        coord3[1] = posY + 25;
 
-
-    Direction dirVert = Direction.UP;
-    Direction dirHorz = Direction.LEFT;
-    public void MoveBoidVertical()
-    {
-        if(boidY2 < 0) {
-            dirVert = Direction.DOWN;
-            int temp = boidY2;
-            boidY2 = boidY1;
-            boidY1 = temp;
-            boidY3 = temp;
-        }
-        else if(boidY2 > tall)
-        {
-            dirVert = Direction.UP;
-            int temp = boidY2;
-            boidY2 = boidY1;
-            boidY1 = temp;
-            boidY3 = temp;
-        }
-
-
-        if(dirVert == Direction.UP)
-        {
-            boidY1 = boidY1 - movement;
-            boidY2 = boidY2 - movement;
-            boidY3 = boidY3 - movement;
-            //TODO Implement Fixed Time Step Update
-        }
-        else
-        {
-            boidY1 = boidY1 + movement;
-            boidY2 = boidY2 + movement;
-            boidY3 = boidY3 + movement;
-            //TODO Implement Fixed Time Step Update
-        }
-        boidShape = new Polygon(new int[]{boidX1, boidX2, boidX3}, new int[]{boidY1, boidY2, boidY3}, 3);
-    }
-
-    public void MoveBoidHorizontal()
-    {
-        if (boidX1 < 0)
-        {
-            dirHorz = Direction.RIGHT;
-
-        }
-        else if (boidX3 > wide)
-        {
-            dirHorz = Direction.LEFT;
-        }
-
-        if(dirHorz == Direction.LEFT)
-        {
-            boidX1 = boidX1 - movement;
-            boidX2 = boidX2 - movement;
-            boidX3 = boidX3 - movement;
-            //TODO Implement Fixed Time Step Update
-        }
-        else
-        {
-            boidX1 = boidX1 + movement;
-            boidX2 = boidX2 + movement;
-            boidX3 = boidX3 + movement;
-            //TODO Implement Fixed Time Step Update
-        }
-        boidShape = new Polygon(new int[]{boidX1, boidX2, boidX3}, new int[]{boidY1, boidY2, boidY3}, 3);
+        boidShape = new Path2D.Double();
+        boidShape.moveTo(coord2[0],coord2[1]);
+        boidShape.lineTo(coord1[0],coord1[1]);
+        boidShape.lineTo(coord3[0],coord3[1]);
+        boidShape.closePath();
     }
 
     void centers()
     {
-        centerX = (boidX1 + boidX2 + boidX3) /3;
-        centerY = (boidY1 + boidY2 + boidY3) /3;
+        centerX = (coord1[0] + coord2[0] + coord3[0]) /3;
+        centerY = (coord1[1] + coord2[1] + coord3[1]) /3;
     }
     public double getCenterX() {
         return centerX;
@@ -139,75 +82,75 @@ public class Boid
         return centerY;
     }
 
-//    Xnew = Xold x cosθ – Yold x sinθ
-//    Ynew = Xold x sinθ + Yold x cosθ
-    double rotation;
 
-    public void addRotation() {
-        this.rotation = rotation + 0.01;
-    }
 
-    void RotateLeft()
+
+
+    Direction dirVert = Direction.UP;
+    Direction dirHorz = Direction.LEFT;
+    public void MoveBoidVertical()
     {
-        boidX1 = (int) ((boidX1 * Math.cos(rotation)) - (boidY1 * Math.sin(rotation)));
-        boidY1 = (int) ((boidX1 * Math.sin(rotation)) + (boidY1 * Math.cos(rotation)));
+        if(coord2[1] < 0)
+        {
+            dirVert = Direction.DOWN;
+        }
+        else if(coord2[1] > tall)
+        {
+            dirVert = Direction.UP;
+        }
 
-        boidX2 = (int) ((boidX2 * Math.cos(rotation)) - (boidY2 * Math.sin(rotation)));
-        boidY2 = (int) ((boidX2 * Math.sin(rotation)) + (boidY2 * Math.cos(rotation)));
-
-        boidX3 = (int) ((boidX3 * Math.cos(rotation)) - (boidY3 * Math.sin(rotation)));
-        boidY3 = (int) ((boidX3 * Math.sin(rotation)) + (boidY3 * Math.cos(rotation)));
-
-        boidShape = new Polygon(new int[]{boidX1, boidX2, boidX3}, new int[]{boidY1, boidY2, boidY3}, 3);
+        if(dirVert == Direction.UP)
+        {
+            coord1[1] = coord1[1] - movement;
+            coord2[1] = coord2[1] - movement;
+            coord3[1] = coord3[1] - movement;
+            //TODO Implement Fixed Time Step Update
+        }
+        else
+        {
+            coord1[1] = coord1[1] + movement;
+            coord2[1] = coord2[1] + movement;
+            coord3[1] = coord3[1] + movement;
+            //TODO Implement Fixed Time Step Update
+        }
+        boidShape = new Path2D.Double();
+        boidShape.moveTo(coord2[0],coord2[1]);
+        boidShape.lineTo(coord1[0],coord1[1]);
+        boidShape.lineTo(coord3[0],coord3[1]);
+        boidShape.closePath();
     }
 
-//    public void turnLeft()
-//    {
-//            boidX2 = boidX2 - 1;
-//            boidY2 = boidY2 - 1;
-//
-//            boidX1 = boidX1 + 1;
-//            boidY1 = boidY1 + 1;
-//
-//            boidX3 = boidX3 + 1;
-//            boidY3 = boidY3 + 1;
-//
-//        boidShape = new Polygon(new int[]{boidX1, boidX2, boidX3}, new int[]{boidY1, boidY2, boidY3}, 3);
-//    }
-//
-//    public void turnRight()
-//    {
-//        if(boidY2 < boidY1)
-//        {
-//            boidX2 = boidX2 + 1;
-//            boidY2 = boidY2 + 1;
-//
-//            boidX1 = boidX1 - 1;
-//            boidY1 = boidY1 - 1;
-//
-//            boidX3 = boidX3 - 1;
-//            boidY3 = boidY3 - 1;
-//            AffineTransform affineTransform = new AffineTransform();
-//            affineTransform.translate(1,1);
-//        }
-//        else
-//        {
-//            boidX2 = boidX2 - 1;
-//            boidY2 = boidY2 - 1;
-//
-//            boidX1 = boidX1 - 1;
-//            boidY1 = boidY1 - 1;
-//
-//            boidX3 = boidX3 - 1;
-//            boidY3 = boidY3 - 1;
-//        }
-//        boidShape = new Polygon(new int[]{boidX1, boidX2, boidX3}, new int[]{boidY1, boidY2, boidY3}, 3);
-//    }
-
-    void printcoords()
+    public void MoveBoidHorizontal()
     {
-        System.out.println("X1:" + boidX1 + " Y1:" + boidY1);
-        System.out.println("X2:" + boidX2 + " Y2:" + boidY2);
-        System.out.println("X3:" + boidX3 + " Y3:" + boidY3);
+        if (coord1[0] < 0)
+        {
+            dirHorz = Direction.RIGHT;
+        }
+        else if (coord3[0] > wide)
+        {
+            dirHorz = Direction.LEFT;
+        }
+
+        if(dirHorz == Direction.LEFT)
+        {
+            coord1[0] = coord1[0] - movement;
+            coord2[0] = coord2[0] - movement;
+            coord3[0] = coord3[0] - movement;
+            //TODO Implement Fixed Time Step Update
+        }
+        else
+        {
+            coord1[0] = coord1[0] + movement;
+            coord2[0] = coord2[0] + movement;
+            coord3[0] = coord3[0] + movement;
+            //TODO Implement Fixed Time Step Update
+        }
+        boidShape = new Path2D.Double();
+        boidShape.moveTo(coord2[0],coord2[1]);
+        boidShape.lineTo(coord1[0],coord1[1]);
+        boidShape.lineTo(coord3[0],coord3[1]);
+        boidShape.closePath();
     }
+
 }
+
