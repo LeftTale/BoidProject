@@ -29,16 +29,17 @@ public class Boid
         this.tall = tall;
         GenerateBoid();
         //boidShape = new Polygon(new int[]{boidX1, boidX2,boidX3}, new int[]{boidY1,boidY2,boidY3},3);
-
     }
 
     public Path2D getBoidShape() {
         return boidShape;
     }
+
     public Color getBoidColor()
     {
         return boidColor;
     }
+    public void setBoidColor(Color boidColor){this.boidColor = boidColor;}
 
     public void GenerateBoid()
     {
@@ -134,7 +135,7 @@ public class Boid
         coord[1] = (tempY * Math.cos(rotation)) + (tempX * Math.sin(rotation)) + centerY;
     }
 
-    
+
 
 }
 

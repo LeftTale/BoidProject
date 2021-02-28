@@ -10,7 +10,7 @@ public class Main
 
     for (int i = 0; i < 20; i++)
     {
-        activeBoids.add(new Boid(space.getScreenSizeX(),space.getScreenSizeY(),Color.WHITE));
+        activeBoids.add(new Boid(space.getScreenSizeX(),space.getScreenSizeY(),Color.CYAN));
     }
 
         space.setActiveBoid(activeBoids);
