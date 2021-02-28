@@ -10,7 +10,6 @@ public class FrameTimer extends Thread
         this.boidView = s;
         this.activeBoids = activeBoids;
         run();
-
     }
 
     @Override
@@ -22,10 +21,7 @@ public class FrameTimer extends Thread
 
             for(Boid b : activeBoids)
             {
-                b.centers();
-                b.FindForward();
-                b.MoveBoidForward(2);
-
+                b.BoundaryCheck();
             }
             boidView.repaint();
 

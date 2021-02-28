@@ -8,10 +8,10 @@ public class Main
         ScreenSpace space = new ScreenSpace();
         ArrayList<Boid> activeBoids = new ArrayList<>();
 
-    for (int i = 0; i < 20; i++)
-    {
-        activeBoids.add(new Boid(space.getScreenSizeX(),space.getScreenSizeY(),Color.CYAN));
-    }
+        for (int i = 0; i < 10; i++)
+        {
+            activeBoids.add(new Boid(space.getScreenSizeX(),space.getScreenSizeY(),Color.WHITE));
+        }
 
         space.setActiveBoid(activeBoids);
         space.init();

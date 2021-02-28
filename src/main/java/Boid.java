@@ -17,10 +17,13 @@ public class Boid
 
     private int wide;
     private int tall;
-    private double movement = 2.0;
+    double speed = 1;
 
     private double centerX;
     private double centerY;
+
+    Direction dir = Direction.STRAIGHT;
+
 
     public Boid(int wide, int tall, Color color)
     {
@@ -44,8 +47,8 @@ public class Boid
     public void GenerateBoid()
     {
         //Generates 2 random numbers within the size of the screen
-        int posX = (int) (Math.random() * wide);
-        int posY = (int) (Math.random() * tall);
+        int posX = (int) ((Math.random() * (wide - 100)) + 100);
+        int posY = (int) ((Math.random() * (tall - 100)) + 100);
 
         //Sets one point of the triangle as the base
         coord2[0] = posX;
@@ -82,9 +85,38 @@ public class Boid
         System.out.println(centerX + " " + centerY);
     }
 
-    double forwardX;
-    double forwardY;
-    public void FindForward()
+    void BoundaryCheck()
+    {
+        double boundaryLeft = 100;
+        double boundaryRight = wide - 100;
+        double boundaryTop = 100;
+        double boundaryBottom = tall - 100;
+        if(coord2[0] <= boundaryLeft || coord2[0] >= boundaryRight)
+        {
+            RotateBoid(0.1);
+            for (int i = 0; i < 3; i++)
+            {
+                FindForward(speed);
+            }
+        }
+        else if(coord2[1] <= boundaryTop || coord2[1] >= boundaryBottom)
+        {
+            RotateBoid(0.1);
+            for (int i = 0; i < 3; i++)
+            {
+                FindForward(speed);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                FindForward(speed);
+            }
+        }
+    }
+
+    public void FindForward(double speed)
     {
         centers();
         double[] forwardV = new double[2];
@@ -93,11 +125,14 @@ public class Boid
 
         double mag = Math.sqrt((forwardV[0] * forwardV[0]) + (forwardV[1] * forwardV[1]));
 
-        forwardX = forwardV[0]/mag;
-        forwardY = forwardV[1]/mag;
+        double forwardX = forwardV[0]/mag;
+        double forwardY = forwardV[1]/mag;
+
+        MoveBoidForward(forwardX,forwardY,speed);
+
     }
 
-    void MoveBoidForward(double speed)
+    void MoveBoidForward(double forwardX, double forwardY,double speed)
     {
         coord1[0] = coord1[0] + (forwardX * speed);
         coord2[0] = coord2[0] + (forwardX * speed);
@@ -134,6 +169,8 @@ public class Boid
         coord[0] = (tempX * Math.cos(rotation)) - (tempY * Math.sin(rotation)) + centerX;
         coord[1] = (tempY * Math.cos(rotation)) + (tempX * Math.sin(rotation)) + centerY;
     }
+
+
 
 
 
