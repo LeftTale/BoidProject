@@ -22,8 +22,10 @@ public class FrameTimer extends Thread
 
             for(Boid b : activeBoids)
             {
-                b.MoveBoidVertical();
-                b.MoveBoidHorizontal();
+                b.centers();
+                b.FindForward();
+                b.MoveBoidForward(2);
+
             }
             boidView.repaint();
 

@@ -1,9 +1,5 @@
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
-import java.util.Vector;
 
 public class Boid
 {
@@ -14,15 +10,14 @@ public class Boid
      */
     private Color boidColor;
     private Path2D boidShape;
-    double boidX1 ,boidX2,boidX3;
-    double boidY1, boidY2,boidY3;
     double[] coord1 = new double[2];
     double[] coord2 = new double[2];
     double[] coord3 = new double[2];
 
+
     private int wide;
     private int tall;
-    private double movement = 5.0;
+    private double movement = 2.0;
 
     private double centerX;
     private double centerY;
@@ -63,6 +58,14 @@ public class Boid
         coord1[1] = posY + 25;
         coord3[1] = posY + 25;
 
+        double randomRot = 10 * Math.random();
+        RotateBoid(randomRot);
+
+        RedefineBoid();
+    }
+
+    void RedefineBoid()
+    {
         boidShape = new Path2D.Double();
         boidShape.moveTo(coord2[0],coord2[1]);
         boidShape.lineTo(coord1[0],coord1[1]);
@@ -74,83 +77,64 @@ public class Boid
     {
         centerX = (coord1[0] + coord2[0] + coord3[0]) /3;
         centerY = (coord1[1] + coord2[1] + coord3[1]) /3;
-    }
-    public double getCenterX() {
-        return centerX;
-    }
-    public double getCenterY() {
-        return centerY;
+
+        System.out.println(centerX + " " + centerY);
     }
 
-
-
-
-
-    Direction dirVert = Direction.UP;
-    Direction dirHorz = Direction.LEFT;
-    public void MoveBoidVertical()
+    double forwardX;
+    double forwardY;
+    public void FindForward()
     {
-        if(coord2[1] < 0)
-        {
-            dirVert = Direction.DOWN;
-        }
-        else if(coord2[1] > tall)
-        {
-            dirVert = Direction.UP;
-        }
+        centers();
+        double[] forwardV = new double[2];
+        forwardV[0] = coord2[0] - centerX;
+        forwardV[1] = coord2[1] - centerY;
 
-        if(dirVert == Direction.UP)
-        {
-            coord1[1] = coord1[1] - movement;
-            coord2[1] = coord2[1] - movement;
-            coord3[1] = coord3[1] - movement;
-            //TODO Implement Fixed Time Step Update
-        }
-        else
-        {
-            coord1[1] = coord1[1] + movement;
-            coord2[1] = coord2[1] + movement;
-            coord3[1] = coord3[1] + movement;
-            //TODO Implement Fixed Time Step Update
-        }
-        boidShape = new Path2D.Double();
-        boidShape.moveTo(coord2[0],coord2[1]);
-        boidShape.lineTo(coord1[0],coord1[1]);
-        boidShape.lineTo(coord3[0],coord3[1]);
-        boidShape.closePath();
+        double mag = Math.sqrt((forwardV[0] * forwardV[0]) + (forwardV[1] * forwardV[1]));
+
+        forwardX = forwardV[0]/mag;
+        forwardY = forwardV[1]/mag;
     }
 
-    public void MoveBoidHorizontal()
+    void MoveBoidForward(double speed)
     {
-        if (coord1[0] < 0)
-        {
-            dirHorz = Direction.RIGHT;
-        }
-        else if (coord3[0] > wide)
-        {
-            dirHorz = Direction.LEFT;
-        }
+        coord1[0] = coord1[0] + (forwardX * speed);
+        coord2[0] = coord2[0] + (forwardX * speed);
+        coord3[0] = coord3[0] + (forwardX * speed);
 
-        if(dirHorz == Direction.LEFT)
-        {
-            coord1[0] = coord1[0] - movement;
-            coord2[0] = coord2[0] - movement;
-            coord3[0] = coord3[0] - movement;
-            //TODO Implement Fixed Time Step Update
-        }
-        else
-        {
-            coord1[0] = coord1[0] + movement;
-            coord2[0] = coord2[0] + movement;
-            coord3[0] = coord3[0] + movement;
-            //TODO Implement Fixed Time Step Update
-        }
-        boidShape = new Path2D.Double();
-        boidShape.moveTo(coord2[0],coord2[1]);
-        boidShape.lineTo(coord1[0],coord1[1]);
-        boidShape.lineTo(coord3[0],coord3[1]);
-        boidShape.closePath();
+        coord1[1] = coord1[1] + (forwardY * speed);
+        coord2[1] = coord2[1] + (forwardY * speed);
+        coord3[1] = coord3[1] + (forwardY * speed);
+
+        RedefineBoid();
     }
+
+    void RotateBoid(double angle)
+    {
+        centers();
+
+        double tempX;
+        double tempY;
+
+        Rotate(angle, coord1);
+        Rotate(angle, coord2);
+        Rotate(angle, coord3);
+
+        RedefineBoid();
+    }
+
+    private void Rotate(double rotation, double[] coord)
+    {
+        double tempX;
+        double tempY;
+        tempX = coord[0] - centerX;
+        tempY = coord[1] - centerY;
+
+        coord[0] = (tempX * Math.cos(rotation)) - (tempY * Math.sin(rotation)) + centerX;
+        coord[1] = (tempY * Math.cos(rotation)) + (tempX * Math.sin(rotation)) + centerY;
+    }
+
+    
 
 }
 

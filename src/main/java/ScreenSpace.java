@@ -71,9 +71,18 @@ public class ScreenSpace extends JPanel
         @Override
         public void keyPressed(KeyEvent e)
         {
-            for(Boid b : activeBoid)
+            int keyCode = e.getKeyCode();
+            switch (keyCode)
             {
-                b.MoveBoidHorizontal();
+                case KeyEvent.VK_LEFT:
+                    for (Boid b : activeBoid)
+                        b.RotateBoid(-0.1);
+                        break;
+
+                case KeyEvent.VK_RIGHT:
+                    for (Boid b : activeBoid)
+                        b.RotateBoid(0.1);
+                        break;
             }
         }
 

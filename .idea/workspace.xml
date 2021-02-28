@@ -7,6 +7,7 @@
     <list default="true" id="c51a5e1b-0aa3-4cdd-bd39-a310b8893e07" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Boid.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Boid.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Direction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Direction.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/FrameTimer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/FrameTimer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/ScreenSpace.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ScreenSpace.java" afterDir="false" />
@@ -115,15 +116,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
           <option name="containerStateName" value="" />
         </value>
       </option>
-      <option name="TEST_OBJECT" value="CLASS" />
-      <properties />
-      <listeners />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -204,16 +203,5 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Basic Shape Implementation" />
     <option name="LAST_COMMIT_MESSAGE" value="Basic Shape Implementation" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/Boid.java</url>
-          <line>133</line>
-          <option name="timeStamp" value="14" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

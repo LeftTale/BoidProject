@@ -8,7 +8,7 @@ public class Main
         ScreenSpace space = new ScreenSpace();
         ArrayList<Boid> activeBoids = new ArrayList<>();
 
-    for (int i = 0; i < 1; i++)
+    for (int i = 0; i < 20; i++)
     {
         activeBoids.add(new Boid(space.getScreenSizeX(),space.getScreenSizeY(),Color.WHITE));
     }
