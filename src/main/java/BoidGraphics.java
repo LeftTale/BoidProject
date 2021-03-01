@@ -4,24 +4,22 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
-public class ScreenSpace extends JPanel
+public class BoidGraphics extends JPanel
 {
     /*
     The interface class is used to show graphical output to the user.
     It will contain a JFrame and will have Boids and objects painted onto it
      */
 
-    JFrame frame = new JFrame();
+    final JFrame frame = new JFrame();
     ArrayList<Boid> activeBoid;
 
-    public ScreenSpace()
+    public BoidGraphics()
     {
        frame.setTitle("Boids");
        frame.setSize(new Dimension(1280,650));
        frame.setLocationRelativeTo(null);
        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-       frame.addKeyListener(new KeyChecker());
-
     }
 
     void init()
@@ -55,40 +53,6 @@ public class ScreenSpace extends JPanel
             g.setColor(boid.getBoidColor());
             g2.draw(boid.getBoidShape());
             g2.fill(boid.getBoidShape());
-
-        }
-    }
-
-
-    class KeyChecker implements KeyListener
-    {
-
-        @Override
-        public void keyTyped(KeyEvent e)
-        {
-        }
-
-        @Override
-        public void keyPressed(KeyEvent e)
-        {
-            int keyCode = e.getKeyCode();
-            switch (keyCode)
-            {
-                case KeyEvent.VK_LEFT:
-                    for (Boid b : activeBoid)
-                        b.RotateBoid(-0.1);
-                        break;
-
-                case KeyEvent.VK_RIGHT:
-                    for (Boid b : activeBoid)
-                        b.RotateBoid(0.1);
-                        break;
-            }
-        }
-
-        @Override
-        public void keyReleased(KeyEvent e) {
-
         }
     }
 }

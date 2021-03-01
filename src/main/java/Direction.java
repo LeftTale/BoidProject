@@ -1,10 +1,6 @@
 public enum Direction
 {
-    LIGHTPORT,
-    HARDPORT,
-
-    LIGHTSTARBOARD,
-    HARDSTARBOARD,
-
+    STARBOARD,
+    PORT,
     STRAIGHT
 }

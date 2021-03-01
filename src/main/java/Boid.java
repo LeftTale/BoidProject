@@ -10,45 +10,48 @@ public class Boid
      */
     private Color boidColor;
     private Path2D boidShape;
+    @SuppressWarnings("CanBeFinal")
     double[] coord1 = new double[2];
+    @SuppressWarnings("CanBeFinal")
     double[] coord2 = new double[2];
+    @SuppressWarnings("CanBeFinal")
     double[] coord3 = new double[2];
+    @SuppressWarnings("CanBeFinal")
+    double[] forwardDir = new double[2];
 
-
-    private int wide;
-    private int tall;
-    double speed = 1;
+    private final int wide;
+    private final int tall;
 
     private double centerX;
     private double centerY;
 
+    @SuppressWarnings("unused")
     Direction dir = Direction.STRAIGHT;
-
 
     public Boid(int wide, int tall, Color color)
     {
         this.boidColor = color;
         this.wide = wide;
         this.tall = tall;
+
         GenerateBoid();
-        //boidShape = new Polygon(new int[]{boidX1, boidX2,boidX3}, new int[]{boidY1,boidY2,boidY3},3);
     }
 
     public Path2D getBoidShape() {
         return boidShape;
     }
-
     public Color getBoidColor()
     {
         return boidColor;
     }
+
     public void setBoidColor(Color boidColor){this.boidColor = boidColor;}
 
     public void GenerateBoid()
     {
         //Generates 2 random numbers within the size of the screen
-        int posX = (int) ((Math.random() * (wide - 100)) + 100);
-        int posY = (int) ((Math.random() * (tall - 100)) + 100);
+        int posX = (int) ((Math.random() * (wide - 400)) +100);
+        int posY = (int) ((Math.random() * (tall - 300)) +100);
 
         //Sets one point of the triangle as the base
         coord2[0] = posX;
@@ -58,7 +61,6 @@ public class Boid
 
         //It then does the same for the Y Coords
         coord2[1] = posY;
-
         coord1[1] = posY + 25;
         coord3[1] = posY + 25;
 
@@ -81,7 +83,6 @@ public class Boid
     {
         centerX = (coord1[0] + coord2[0] + coord3[0]) /3;
         centerY = (coord1[1] + coord2[1] + coord3[1]) /3;
-
         System.out.println(centerX + " " + centerY);
     }
 
@@ -91,31 +92,28 @@ public class Boid
         double boundaryRight = wide - 100;
         double boundaryTop = 100;
         double boundaryBottom = tall - 100;
+        double speed = 3;
+
         if(coord2[0] <= boundaryLeft || coord2[0] >= boundaryRight)
         {
             RotateBoid(0.1);
-            for (int i = 0; i < 3; i++)
-            {
-                FindForward(speed);
-            }
+            FindForward(speed);
         }
         else if(coord2[1] <= boundaryTop || coord2[1] >= boundaryBottom)
         {
             RotateBoid(0.1);
-            for (int i = 0; i < 3; i++)
-            {
-                FindForward(speed);
-            }
+            FindForward(speed);
         }
         else
         {
-            for (int i = 0; i < 3; i++)
-            {
-                FindForward(speed);
-            }
+            FindForward(speed);
         }
     }
 
+
+    /*
+    Calculates the forward direction of the boid and then normalises it to a length of one
+     */
     public void FindForward(double speed)
     {
         centers();
@@ -125,14 +123,18 @@ public class Boid
 
         double mag = Math.sqrt((forwardV[0] * forwardV[0]) + (forwardV[1] * forwardV[1]));
 
-        double forwardX = forwardV[0]/mag;
-        double forwardY = forwardV[1]/mag;
+        forwardDir[0] = forwardV[0]/mag;
+        forwardDir[1] = forwardV[1]/mag;
 
-        MoveBoidForward(forwardX,forwardY,speed);
-
+        MoveBoidForward(forwardDir[0],forwardDir[1],speed);
     }
 
-    void MoveBoidForward(double forwardX, double forwardY,double speed)
+    public double[] getForwardDir()
+    {
+        return forwardDir;
+    }
+
+    void MoveBoidForward(double forwardX, double forwardY, double speed)
     {
         coord1[0] = coord1[0] + (forwardX * speed);
         coord2[0] = coord2[0] + (forwardX * speed);
@@ -148,9 +150,6 @@ public class Boid
     void RotateBoid(double angle)
     {
         centers();
-
-        double tempX;
-        double tempY;
 
         Rotate(angle, coord1);
         Rotate(angle, coord2);
@@ -169,10 +168,5 @@ public class Boid
         coord[0] = (tempX * Math.cos(rotation)) - (tempY * Math.sin(rotation)) + centerX;
         coord[1] = (tempY * Math.cos(rotation)) + (tempX * Math.sin(rotation)) + centerY;
     }
-
-
-
-
-
 }
 

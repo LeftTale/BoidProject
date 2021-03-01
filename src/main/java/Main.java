@@ -5,10 +5,10 @@ public class Main
 {
     public static void main(String[] args)
     {
-        ScreenSpace space = new ScreenSpace();
+        BoidGraphics space = new BoidGraphics();
         ArrayList<Boid> activeBoids = new ArrayList<>();
 
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 30; i++)
         {
             activeBoids.add(new Boid(space.getScreenSizeX(),space.getScreenSizeY(),Color.WHITE));
         }

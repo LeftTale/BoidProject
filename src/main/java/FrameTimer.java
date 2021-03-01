@@ -2,32 +2,36 @@ import java.util.ArrayList;
 
 public class FrameTimer extends Thread
 {
-    ScreenSpace boidView;
-    long startTime;
+    /*
+    This class runs important methods every 200 milliseconds
+    The methods do things like move the boids and also runs the boids internal logic
+     */
+
+    BoidGraphics boidGraphics;
     ArrayList<Boid> activeBoids;
-    public FrameTimer(ScreenSpace s, ArrayList<Boid> activeBoids)
+    public FrameTimer(BoidGraphics s, ArrayList<Boid> activeBoids)
     {
-        this.boidView = s;
+        this.boidGraphics = s;
         this.activeBoids = activeBoids;
-        run();
+        start();
     }
 
+    @SuppressWarnings("InfiniteLoopStatement")
     @Override
     public void run()
     {
         while(true)
         {
-            startTime = System.currentTimeMillis();
-
+            //Runs methods for everyboid that exists
             for(Boid b : activeBoids)
             {
                 b.BoundaryCheck();
             }
-            boidView.repaint();
+            boidGraphics.repaint();
 
             try
             {
-                sleep(20);
+                sleep(10);
             }
             catch (InterruptedException e)
             {
