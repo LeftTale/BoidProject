@@ -22,7 +22,7 @@ public class FrameTimer extends Thread
     {
         while(true)
         {
-            //Runs methods for everyboid that exists
+            //Runs methods for every boid that exists
             for(Boid b : activeBoids)
             {
                 b.BoundaryCheck();
