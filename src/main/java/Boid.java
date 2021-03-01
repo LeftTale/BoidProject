@@ -83,7 +83,6 @@ public class Boid
     {
         centerX = (coord1[0] + coord2[0] + coord3[0]) /3;
         centerY = (coord1[1] + coord2[1] + coord3[1]) /3;
-        System.out.println(centerX + " " + centerY);
     }
 
     void BoundaryCheck()
