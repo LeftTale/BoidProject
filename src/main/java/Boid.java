@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 
 public class Boid
@@ -9,6 +10,9 @@ public class Boid
     which control the boids movement and behaviour.
      */
     private Color boidColor;
+    Shape lineOfSight;
+    String boidName;
+
     private Path2D boidShape;
     @SuppressWarnings("CanBeFinal")
     double[] coord1 = new double[2];
@@ -28,12 +32,12 @@ public class Boid
     @SuppressWarnings("unused")
     Direction dir = Direction.STRAIGHT;
 
-    public Boid(int wide, int tall, Color color)
+    public Boid(int wide, int tall, Color color, String boidName)
     {
         this.boidColor = color;
         this.wide = wide;
         this.tall = tall;
-
+        this.boidName = boidName;
         GenerateBoid();
     }
 
@@ -43,6 +47,24 @@ public class Boid
     public Color getBoidColor()
     {
         return boidColor;
+    }
+    public double[] getForwardDir()
+    {
+        return forwardDir;
+    }
+    public double[] getCoord2()
+    {
+        return coord2;
+    }
+    public Shape getLineOfSight() {
+        return lineOfSight;
+    }
+    public String getBoidName() {
+        return boidName;
+    }
+
+    public Rectangle getBounds() {
+        return new Rectangle((int)centerX - 25, (int)centerY - 10, 25, 50);
     }
 
     public void setBoidColor(Color boidColor){this.boidColor = boidColor;}
@@ -83,6 +105,13 @@ public class Boid
     {
         centerX = (coord1[0] + coord2[0] + coord3[0]) /3;
         centerY = (coord1[1] + coord2[1] + coord3[1]) /3;
+    }
+
+    public double getCenterX() {
+        return centerX;
+    }
+    public double getCenterY() {
+        return centerY;
     }
 
     void BoundaryCheck()
@@ -128,10 +157,7 @@ public class Boid
         MoveBoidForward(forwardDir[0],forwardDir[1],speed);
     }
 
-    public double[] getForwardDir()
-    {
-        return forwardDir;
-    }
+
 
     void MoveBoidForward(double forwardX, double forwardY, double speed)
     {
@@ -167,5 +193,18 @@ public class Boid
         coord[0] = (tempX * Math.cos(rotation)) - (tempY * Math.sin(rotation)) + centerX;
         coord[1] = (tempY * Math.cos(rotation)) + (tempX * Math.sin(rotation)) + centerY;
     }
+
+    public void BoidSight()
+    {
+        double endCordX = coord2[0] + ( 50 * forwardDir[0]);
+        double endCordY = coord2[1] + ( 50 * forwardDir[1]);
+        lineOfSight = new Line2D.Double(coord2[0],coord2[1],endCordX,endCordY);
+    }
+
+    public void BoidAvoid()
+    {
+
+    }
+
 }
 

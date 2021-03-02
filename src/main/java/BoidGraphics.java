@@ -1,7 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
 public class BoidGraphics extends JPanel
@@ -53,6 +51,20 @@ public class BoidGraphics extends JPanel
             g.setColor(boid.getBoidColor());
             g2.draw(boid.getBoidShape());
             g2.fill(boid.getBoidShape());
+            g2.draw(boid.getLineOfSight());
+
+
+            g2.setColor(Color.GREEN);
+            g2.drawString(boid.getBoidName(),(int)boid.getCenterX(),(int)boid.getCenterY() - 20);
+
+            for (Boid b: activeBoid)
+            {
+             if (boid.getLineOfSight().intersects(b.getBounds()))
+                {
+                    if(b != boid)
+                        System.out.println(b.getBoidName() + " collided with " + boid.getBoidName());
+                }
+            }
         }
     }
 }

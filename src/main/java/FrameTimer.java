@@ -26,6 +26,7 @@ public class FrameTimer extends Thread
             for(Boid b : activeBoids)
             {
                 b.BoundaryCheck();
+                b.BoidSight();
             }
             boidGraphics.repaint();
 
