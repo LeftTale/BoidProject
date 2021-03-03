@@ -18,13 +18,13 @@ public class BoidGraphics extends JPanel
     public BoidGraphics()
     {
        frame.setTitle("Boids");
-       frame.setSize(new Dimension(1920,1000));
+       frame.setSize(new Dimension(1280,600));
        frame.setLocationRelativeTo(null);
        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-       boundaryBox[0] = new Rectangle(0,0,getScreenSizeX(),20);
-       boundaryBox[1] = new Rectangle(0,0,20,getScreenSizeY());
-       boundaryBox[2] = new Rectangle(0,getScreenSizeY()-55,getScreenSizeX(),20);
-       boundaryBox[3] = new Rectangle(getScreenSizeX()-35,0,20,getScreenSizeY());
+       boundaryBox[0] = new Rectangle(0,0,frame.getWidth(),20);
+       boundaryBox[1] = new Rectangle(0,0,20,frame.getHeight());
+       boundaryBox[2] = new Rectangle(0,frame.getHeight()-50,frame.getWidth(),20);
+       boundaryBox[3] = new Rectangle(frame.getWidth()-35,0,20,frame.getHeight());
     }
 
     void init()
@@ -88,23 +88,7 @@ public class BoidGraphics extends JPanel
         }
         return false;
     }
-    void CheckCollision(Boid boid)
-    {
-        if(boid.getLineOfSight().intersects(boundaryBox[0])||
-                    boid.getLineOfSight().intersects(boundaryBox[1])||
-                    boid.getLineOfSight().intersects(boundaryBox[2])||
-                    boid.getLineOfSight().intersects(boundaryBox[3]))
-        {
-            boid.BoidReroute();
-            CheckCollision(boid);
-        }
-        else
-        {
-            boid.setPreviousState(boid.moveState);
-            boid.setMoveState(Direction.STRAIGHT);
 
-        }
-    }
 
 
 }
