@@ -70,28 +70,39 @@ public class BoidGraphics extends JPanel
             g2.setColor(Color.GREEN);
             g2.drawString(boid.getBoidName(),(int)boid.getCenterX()-20,(int)boid.getCenterY() - 25);
 
-            CheckCollision(boid);
+            if(CheckWallCollision(boid))
+                boid.BoidReroute();
+
 
         }
     }
 
-    boolean CheckCollision(Boid boid)
+    boolean CheckWallCollision(Boid boid)
+    {
+        if(boid.getLineOfSight().intersects(boundaryBox[0])||
+                boid.getLineOfSight().intersects(boundaryBox[1])||
+                boid.getLineOfSight().intersects(boundaryBox[2])||
+                boid.getLineOfSight().intersects(boundaryBox[3]))
+        {
+            return true;
+        }
+        return false;
+    }
+    void CheckCollision(Boid boid)
     {
         if(boid.getLineOfSight().intersects(boundaryBox[0])||
                     boid.getLineOfSight().intersects(boundaryBox[1])||
                     boid.getLineOfSight().intersects(boundaryBox[2])||
                     boid.getLineOfSight().intersects(boundaryBox[3]))
         {
-            System.out.println("Hit wall");
-            boid.setPreviousState(boid.moveState);
-            boid.setMoveState(Direction.STARBOARD_WALL);
-            return true;
+            boid.BoidReroute();
+            CheckCollision(boid);
         }
         else
         {
             boid.setPreviousState(boid.moveState);
             boid.setMoveState(Direction.STRAIGHT);
-            return false;
+
         }
     }
 
