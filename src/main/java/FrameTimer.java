@@ -25,8 +25,9 @@ public class FrameTimer extends Thread
             //Runs methods for every boid that exists
             for(Boid b : activeBoids)
             {
-                b.BoundaryCheck();
+                b.FindForward();
                 b.BoidSight();
+                b.BoidSteering();
             }
             boidGraphics.repaint();
 

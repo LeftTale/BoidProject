@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 public class BoidGraphics extends JPanel
@@ -11,13 +12,19 @@ public class BoidGraphics extends JPanel
 
     final JFrame frame = new JFrame();
     ArrayList<Boid> activeBoid;
+    Rectangle2D[] boundaryBox = new Rectangle2D[4];
+    Font name = new Font("Hello",1,20);
 
     public BoidGraphics()
     {
        frame.setTitle("Boids");
-       frame.setSize(new Dimension(1280,650));
+       frame.setSize(new Dimension(1920,1000));
        frame.setLocationRelativeTo(null);
        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+       boundaryBox[0] = new Rectangle(0,0,getScreenSizeX(),20);
+       boundaryBox[1] = new Rectangle(0,0,20,getScreenSizeY());
+       boundaryBox[2] = new Rectangle(0,getScreenSizeY()-55,getScreenSizeX(),20);
+       boundaryBox[3] = new Rectangle(getScreenSizeX()-35,0,20,getScreenSizeY());
     }
 
     void init()
@@ -46,6 +53,12 @@ public class BoidGraphics extends JPanel
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
+        g2.setColor(Color.WHITE);
+        g2.fill(boundaryBox[0]);
+        g2.fill(boundaryBox[1]);
+        g2.fill(boundaryBox[2]);
+        g2.fill(boundaryBox[3]);
+
         for (Boid boid : activeBoid)
         {
             g.setColor(boid.getBoidColor());
@@ -53,18 +66,34 @@ public class BoidGraphics extends JPanel
             g2.fill(boid.getBoidShape());
             g2.draw(boid.getLineOfSight());
 
-
+            g2.setFont(name);
             g2.setColor(Color.GREEN);
-            g2.drawString(boid.getBoidName(),(int)boid.getCenterX(),(int)boid.getCenterY() - 20);
+            g2.drawString(boid.getBoidName(),(int)boid.getCenterX()-20,(int)boid.getCenterY() - 25);
 
-            for (Boid b: activeBoid)
-            {
-             if (boid.getLineOfSight().intersects(b.getBounds()))
-                {
-                    if(b != boid)
-                        System.out.println(b.getBoidName() + " collided with " + boid.getBoidName());
-                }
-            }
+            CheckCollision(boid);
+
         }
     }
+
+    boolean CheckCollision(Boid boid)
+    {
+        if(boid.getLineOfSight().intersects(boundaryBox[0])||
+                    boid.getLineOfSight().intersects(boundaryBox[1])||
+                    boid.getLineOfSight().intersects(boundaryBox[2])||
+                    boid.getLineOfSight().intersects(boundaryBox[3]))
+        {
+            System.out.println("Hit wall");
+            boid.setPreviousState(boid.moveState);
+            boid.setMoveState(Direction.STARBOARD_WALL);
+            return true;
+        }
+        else
+        {
+            boid.setPreviousState(boid.moveState);
+            boid.setMoveState(Direction.STRAIGHT);
+            return false;
+        }
+    }
+
+
 }

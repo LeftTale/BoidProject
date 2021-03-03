@@ -10,9 +10,10 @@ public class Boid
     which control the boids movement and behaviour.
      */
     private Color boidColor;
-    Shape lineOfSight;
+    private double speed = 3;
     String boidName;
 
+    Shape lineOfSight;
     private Path2D boidShape;
     @SuppressWarnings("CanBeFinal")
     double[] coord1 = new double[2];
@@ -20,17 +21,21 @@ public class Boid
     double[] coord2 = new double[2];
     @SuppressWarnings("CanBeFinal")
     double[] coord3 = new double[2];
+
     @SuppressWarnings("CanBeFinal")
     double[] forwardDir = new double[2];
+    double[] targetDir = new double[2];
 
     private final int wide;
     private final int tall;
 
     private double centerX;
     private double centerY;
+    double sightEndCordX;
+    double sightEndCordY;
 
-    @SuppressWarnings("unused")
-    Direction dir = Direction.STRAIGHT;
+    Direction moveState = Direction.STRAIGHT;
+    Direction previousState;
 
     public Boid(int wide, int tall, Color color, String boidName)
     {
@@ -62,12 +67,32 @@ public class Boid
     public String getBoidName() {
         return boidName;
     }
-
+    public double getCenterX() {
+        return centerX;
+    }
+    public double getCenterY() {
+        return centerY;
+    }
     public Rectangle getBounds() {
-        return new Rectangle((int)centerX - 25, (int)centerY - 10, 25, 50);
+        return new Rectangle((int)centerX -10, (int)centerY-20, 25, 40);
+    }
+    public Direction getMoveState() {
+        return moveState;
+    }
+    public Direction getPreviousState() {
+        return previousState;
     }
 
     public void setBoidColor(Color boidColor){this.boidColor = boidColor;}
+    public void setMoveState(Direction moveState) {
+        this.moveState = moveState;
+    }
+    public void setPreviousState(Direction previousState) {
+        this.previousState = previousState;
+    }
+    public void setTargetDir(double[] targetDir) {
+        this.targetDir = targetDir;
+    }
 
     public void GenerateBoid()
     {
@@ -87,7 +112,7 @@ public class Boid
         coord3[1] = posY + 25;
 
         double randomRot = 10 * Math.random();
-        RotateBoid(randomRot);
+        CallRotate(randomRot);
 
         RedefineBoid();
     }
@@ -107,42 +132,36 @@ public class Boid
         centerY = (coord1[1] + coord2[1] + coord3[1]) /3;
     }
 
-    public double getCenterX() {
-        return centerX;
-    }
-    public double getCenterY() {
-        return centerY;
-    }
-
-    void BoundaryCheck()
+    void BoidSteering()
     {
-        double boundaryLeft = 100;
-        double boundaryRight = wide - 100;
-        double boundaryTop = 100;
-        double boundaryBottom = tall - 100;
-        double speed = 3;
+        if(moveState.equals(Direction.STARBOARD_WALL))
+        {
+            CallRotate(.1);
+            MoveBoidForward(forwardDir[0],forwardDir[1],speed);
 
-        if(coord2[0] <= boundaryLeft || coord2[0] >= boundaryRight)
-        {
-            RotateBoid(0.1);
-            FindForward(speed);
         }
-        else if(coord2[1] <= boundaryTop || coord2[1] >= boundaryBottom)
+        else if(moveState.equals(Direction.STRAIGHT))
         {
-            RotateBoid(0.1);
-            FindForward(speed);
-        }
-        else
-        {
-            FindForward(speed);
+            MoveBoidForward(forwardDir[0],forwardDir[1],speed);
         }
     }
+    void BoidReroute()
+    {
+        double tempX;
+        double tempY;
+        tempX =  sightEndCordX - coord2[0];
+        tempY = sightEndCordY - coord2[1];
 
+        sightEndCordX = (tempX * Math.cos(Math.random()*5)) - (tempY * Math.sin(Math.random()*5)) + coord2[0];
+        sightEndCordY = (tempY * Math.cos(Math.random()*5)) + (tempX * Math.sin(Math.random()*5)) + coord2[1];
+
+        lineOfSight = new Line2D.Double(coord2[0],coord2[1],sightEndCordX,sightEndCordY);
+    }
 
     /*
     Calculates the forward direction of the boid and then normalises it to a length of one
      */
-    public void FindForward(double speed)
+    public void FindForward()
     {
         centers();
         double[] forwardV = new double[2];
@@ -153,11 +172,23 @@ public class Boid
 
         forwardDir[0] = forwardV[0]/mag;
         forwardDir[1] = forwardV[1]/mag;
-
-        MoveBoidForward(forwardDir[0],forwardDir[1],speed);
     }
 
+    //Find and return the custom Direction betweeen two points
+    public double[] FindForward(double x1,double y1,double x2,double y2)
+    {
+        double[] forwardV = new double[2];
+        forwardV[0] = x1 - x2;
+        forwardV[1] = y1 - y2;
 
+        double mag = Math.sqrt((forwardV[0] * forwardV[0]) + (forwardV[1] * forwardV[1]));
+
+        double[] customDir = new double[2];
+        customDir[0] = forwardV[0]/mag;
+        customDir[1] = forwardV[1]/mag;
+
+        return customDir;
+    }
 
     void MoveBoidForward(double forwardX, double forwardY, double speed)
     {
@@ -172,7 +203,7 @@ public class Boid
         RedefineBoid();
     }
 
-    void RotateBoid(double angle)
+    void CallRotate(double angle)
     {
         centers();
 
@@ -196,15 +227,10 @@ public class Boid
 
     public void BoidSight()
     {
-        double endCordX = coord2[0] + ( 50 * forwardDir[0]);
-        double endCordY = coord2[1] + ( 50 * forwardDir[1]);
-        lineOfSight = new Line2D.Double(coord2[0],coord2[1],endCordX,endCordY);
+
+        sightEndCordX = coord2[0] + ( 80 * forwardDir[0]);
+        sightEndCordY = coord2[1] + ( 80 * forwardDir[1]);
+        lineOfSight = new Line2D.Double(coord2[0],coord2[1],sightEndCordX,sightEndCordY);
     }
-
-    public void BoidAvoid()
-    {
-
-    }
-
 }
 

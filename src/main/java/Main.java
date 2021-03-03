@@ -8,18 +8,15 @@ public class Main
 {
     public static void main(String[] args) throws FileNotFoundException
     {
-        File boidNames = new File("C:\\Users\\caola\\OneDrive\\Documents\\Java Projects\\BoidProject\\src\\main\\resources\\BoidNames.txt");
-
-            Scanner namer = new Scanner(boidNames);
-
+        File boidNames = new File("src/main/resources/BoidNames.txt");
+        Scanner namer = new Scanner(boidNames);
         String chosenName;
-
         BoidGraphics space = new BoidGraphics();
         ArrayList<Boid> activeBoids = new ArrayList<>();
 
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 20; i++)
         {
-            int tempRand = (int) (Math.random() * 2000);
+            int tempRand = (int) (Math.random() * 1000);
             for(int j = 0; j < tempRand; j++)
             {
                 namer.next();
@@ -27,13 +24,10 @@ public class Main
             chosenName = namer.next();
             activeBoids.add(new Boid(space.getScreenSizeX(),space.getScreenSizeY(),Color.WHITE,chosenName));
         }
-
-
         space.setActiveBoid(activeBoids);
         space.init();
 
         FrameTimer timer = new FrameTimer(space,activeBoids);
-
 
         try
         {
