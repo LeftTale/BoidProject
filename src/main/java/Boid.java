@@ -134,17 +134,27 @@ public class Boid
 
     void BoidSteering()
     {
-        if(moveState.equals(Direction.STARBOARD_WALL))
+        if(moveState.equals(Direction.REDIRECTING))
         {
-            CallRotate(.1);
-            MoveBoidForward(forwardDir[0],forwardDir[1],speed);
+            if(forwardDir[0] <= 0 && forwardDir[0] >= 0)
+            {
+                CallRotate(Math.random() * .5);
+                MoveBoidForward(forwardDir[0], forwardDir[1], speed);
+            }
+            else
+            {
+                CallRotate(Math.random()*-.5);
+                MoveBoidForward(forwardDir[0], forwardDir[1], speed);
+            }
 
+            moveState = Direction.STRAIGHT;
         }
         else if(moveState.equals(Direction.STRAIGHT))
         {
             MoveBoidForward(forwardDir[0],forwardDir[1],speed);
         }
     }
+
     void BoidReroute()
     {
         double tempX;

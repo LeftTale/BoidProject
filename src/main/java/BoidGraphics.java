@@ -71,7 +71,12 @@ public class BoidGraphics extends JPanel
             g2.drawString(boid.getBoidName(),(int)boid.getCenterX()-20,(int)boid.getCenterY() - 25);
 
             if(CheckWallCollision(boid))
+            {
+                boid.setMoveState(Direction.REDIRECTING);
                 boid.BoidReroute();
+                boid.setTargetDir(boid.FindForward(boid.getCoord2()[0],boid.getCoord2()[1],boid.sightEndCordX,boid.sightEndCordY));
+
+            }
 
 
         }
@@ -79,14 +84,10 @@ public class BoidGraphics extends JPanel
 
     boolean CheckWallCollision(Boid boid)
     {
-        if(boid.getLineOfSight().intersects(boundaryBox[0])||
-                boid.getLineOfSight().intersects(boundaryBox[1])||
-                boid.getLineOfSight().intersects(boundaryBox[2])||
-                boid.getLineOfSight().intersects(boundaryBox[3]))
-        {
-            return true;
-        }
-        return false;
+        return boid.getLineOfSight().intersects(boundaryBox[0]) ||
+                boid.getLineOfSight().intersects(boundaryBox[1]) ||
+                boid.getLineOfSight().intersects(boundaryBox[2]) ||
+                boid.getLineOfSight().intersects(boundaryBox[3]);
     }
 
 
